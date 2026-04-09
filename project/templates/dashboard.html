@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Finance Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Finance Tracker</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a>
+            <a href="#transactions" class="nav-link" data-section="transactions">Transactions</a>
+            <a href="#budget" class="nav-link" data-section="budget">Budget</a>
+            <a href="#reports" class="nav-link" data-section="reports">Reports</a>
+            <a href="/logout" class="nav-link logout">Logout</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section active">
+            <h1>Dashboard</h1>
+            
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="card income-card">
+                    <h3>Total Income</h3>
+                    <p class="amount" id="total-income">$0.00</p>
+                    <span class="change positive" id="income-change">+0%</span>
+                </div>
+                <div class="card expense-card">
+                    <h3>Total Expenses</h3>
+                    <p class="amount" id="total-expenses">$0.00</p>
+                    <span class="change negative" id="expense-change">+0%</span>
+                </div>
+                <div class="card savings-card">
+                    <h3>Total Savings</h3>
+                    <p class="amount" id="total-savings">$0.00</p>
+                    <span class="change" id="savings-rate">0%</span>
+                </div>
+            </div>
+
+            <!-- Insights Section -->
+            <div class="insights-section">
+                <h2>Financial Insights</h2>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <h4>Highest Spending Category</h4>
+                        <p id="highest-category">-</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>Savings Rate</h4>
+                        <p id="insight-savings-rate">0%</p>
+                    </div>
+                </div>
+                <div id="insights-warnings" class="warnings-container"></div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="recent-transactions">
+                <h2>Recent Transactions</h2>
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-transactions-body">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Transactions Section -->
+        <section id="transactions" class="content-section">
+            <h1>Transactions</h1>
+            
+            <div class="add-transaction-form">
+                <h2>Add New Transaction</h2>
+                <form id="transaction-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="trans-type">Type</label>
+                            <select id="trans-type" required>
+                                <option value="expense">Expense</option>
+                                <option value="income">Income</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="trans-category">Category</label>
+                            <select id="trans-category" required>
+                                <option value="">Select Category</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="trans-amount">Amount</label>
+                            <input type="number" id="trans-amount" step="0.01" min="0" required placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="trans-date">Date</label>
+                            <input type="date" id="trans-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trans-description">Description</label>
+                            <input type="text" id="trans-description" placeholder="Optional description">
+                        </div>
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button type="submit" class="btn btn-primary">Add Transaction</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="transactions-list">
+                <h2>All Transactions</h2>
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="all-transactions-body">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Budget Section -->
+        <section id="budget" class="content-section">
+            <h1>Budget Management</h1>
+            
+            <div class="set-budget-form">
+                <h2>Set Monthly Budget</h2>
+                <form id="budget-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="budget-category">Category</label>
+                            <select id="budget-category" required>
+                                <option value="">Select Category</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="budget-amount">Monthly Limit</label>
+                            <input type="number" id="budget-amount" step="0.01" min="0" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button type="submit" class="btn btn-primary">Set Budget</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="budget-list">
+                <h2>Your Budgets</h2>
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Monthly Limit</th>
+                            <th>Spent</th>
+                            <th>Remaining</th>
+                        </tr>
+                    </thead>
+                    <tbody id="budget-body">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reports" class="content-section">
+            <h1>Financial Reports</h1>
+            
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Expense by Category</h3>
+                    <canvas id="pie-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Monthly Income vs Expense</h3>
+                    <canvas id="bar-chart"></canvas>
+                </div>
+                <div class="chart-container full-width">
+                    <h3>Savings Trend</h3>
+                    <canvas id="line-chart"></canvas>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
