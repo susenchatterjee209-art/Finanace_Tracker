@@ -482,7 +482,7 @@ function closeModal() {
 
 // Utility functions
 function formatCurrency(amount) {
-    return '$' + (amount || 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    return '₹' + (amount || 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
 
 function formatDate(dateStr) {
